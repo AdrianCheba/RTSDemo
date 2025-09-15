@@ -5,14 +5,14 @@ namespace Scripts
 {
     public class InputSystem : MonoBehaviour
     {
-        UnitSelectionManager _unitSelectionManager;
-
         [SerializeField]
         InputActionAsset _inputActions;
 
+        UnitSelectionManager _unitSelectionManager;
         InputActionMap _map;
-
         InputAction _movement;
+        InputAction _selection;
+        InputAction _multiSelect;
 
         private void Awake()
         {
@@ -36,10 +36,23 @@ namespace Scripts
             _movement = _map.FindAction("Movement");
             _movement.performed += _ =>
             {
-                foreach (GameObject unit in _unitSelectionManager._unitsList)
-                {
-                    unit.GetComponent<UnitMovement>().OnMovement();
-                }
+                _unitSelectionManager.Target();
+            };
+
+            _selection = _map.FindAction("Selection");
+            _selection.performed += _ =>
+            {
+                _unitSelectionManager.Selection();
+            };
+
+            _multiSelect = _map.FindAction("MultiSelect");
+            _multiSelect.started += _ =>
+            {
+                _unitSelectionManager._canMultiSelect = true;
+            };
+            _multiSelect.canceled += _ =>
+            {
+                _unitSelectionManager._canMultiSelect = false;
             };
         }
     }

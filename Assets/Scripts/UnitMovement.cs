@@ -1,31 +1,32 @@
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 namespace Scripts
 {
     public class UnitMovement : MonoBehaviour
     {
-        Camera _camera;
+        bool _shouldMove;
         NavMeshAgent _agent;
 
         [SerializeField]
-        LayerMask _ground;
+        Transform _activityMarker;
 
         private void Start()
         {
-            _camera = Camera.main;
             _agent = GetComponent<NavMeshAgent>();
         }
 
-        public void OnMovement()
+        internal void OnMovement(Vector3 pos)
         {
-            Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (!_shouldMove) return; 
+ 
+            _agent.SetDestination(pos);
+        }
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _ground))
-            {
-                _agent.SetDestination(hit.point);
-            }
+        internal void ToggelActivity(bool isActive)
+        {
+            _shouldMove = isActive;
+            _activityMarker.gameObject.SetActive(isActive);
         }
     }
 }
