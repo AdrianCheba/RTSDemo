@@ -78,7 +78,10 @@ namespace Scripts
                     SetGroundMark(true, _hit.point);
                     foreach (GameObject unit in _selectedUnits)
                     {
-                        unit.GetComponent<UnitMovement>().OnMovement(_hit.point);
+
+                        if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)) return;
+
+                        unitMovement.OnMovement(_hit.point);
                     }
                 }
                 else
@@ -124,9 +127,9 @@ namespace Scripts
 
         private void EnableUnitMovement(GameObject unit, bool isActive)
         {
-            if (unit == null) return;
+            
+            if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)) return;
 
-            UnitMovement unitMovement = unit.GetComponent<UnitMovement>();
             unitMovement.ToggelActivity(isActive);
         }
 
