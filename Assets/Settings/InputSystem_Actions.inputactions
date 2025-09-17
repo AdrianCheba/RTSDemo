@@ -69,6 +69,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UnitSelctionBox",
+            "id": "358ae091-2fad-4ec7-8ae1-6af2ae5bff92",
+            "actions": [
+                {
+                    "name": "UnitSelection",
+                    "type": "Button",
+                    "id": "4d6c07fe-d792-4b8b-9496-b1b94f96ee69",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pointer",
+                    "type": "Value",
+                    "id": "9ae7f164-2408-4036-8cbb-b8e040064161",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d6d6a6da-dfa6-420b-8e91-e1d98474c319",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "UnitSelection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d58fd61-df7f-494a-9d68-074179d4d6b7",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

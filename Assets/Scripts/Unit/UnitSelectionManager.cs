@@ -78,8 +78,8 @@ namespace Scripts
                     SetGroundMark(true, _hit.point);
                     foreach (GameObject unit in _selectedUnits)
                     {
-
-                        if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)) return;
+                        if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
+                            return;
 
                         unitMovement.OnMovement(_hit.point);
                     }
@@ -89,6 +89,17 @@ namespace Scripts
                     SetGroundMark(false, _hit.point);
                 }
             }
+        }
+
+        internal void DragSelect(GameObject unit)
+        {
+            if (!_selectedUnits.Contains(unit))
+            {
+                _selectedUnits.Add(unit);
+                SetGroundMark(true, _hit.point);
+                EnableUnitMovement(unit, true);
+            }
+
         }
 
         private void MultiSelect(GameObject unit)
@@ -127,8 +138,8 @@ namespace Scripts
 
         private void EnableUnitMovement(GameObject unit, bool isActive)
         {
-            
-            if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)) return;
+            if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
+                return;
 
             unitMovement.ToggelActivity(isActive);
         }

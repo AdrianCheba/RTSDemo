@@ -155,6 +155,54 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UnitSelctionBox"",
+            ""id"": ""358ae091-2fad-4ec7-8ae1-6af2ae5bff92"",
+            ""actions"": [
+                {
+                    ""name"": ""UnitSelection"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d6c07fe-d792-4b8b-9496-b1b94f96ee69"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pointer"",
+                    ""type"": ""Value"",
+                    ""id"": ""9ae7f164-2408-4036-8cbb-b8e040064161"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""d6d6a6da-dfa6-420b-8e91-e1d98474c319"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""UnitSelection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d58fd61-df7f-494a-9d68-074179d4d6b7"",
+                    ""path"": ""<Pointer>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pointer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -225,11 +273,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Selection = m_Player.FindAction("Selection", throwIfNotFound: true);
         m_Player_MultiSelect = m_Player.FindAction("MultiSelect", throwIfNotFound: true);
+        // UnitSelctionBox
+        m_UnitSelctionBox = asset.FindActionMap("UnitSelctionBox", throwIfNotFound: true);
+        m_UnitSelctionBox_UnitSelection = m_UnitSelctionBox.FindAction("UnitSelection", throwIfNotFound: true);
+        m_UnitSelctionBox_Pointer = m_UnitSelctionBox.FindAction("Pointer", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UnitSelctionBox.enabled, "This will cause a leak and performance issues, InputSystem_Actions.UnitSelctionBox.Disable() has not been called.");
     }
 
     /// <summary>
@@ -419,6 +472,113 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // UnitSelctionBox
+    private readonly InputActionMap m_UnitSelctionBox;
+    private List<IUnitSelctionBoxActions> m_UnitSelctionBoxActionsCallbackInterfaces = new List<IUnitSelctionBoxActions>();
+    private readonly InputAction m_UnitSelctionBox_UnitSelection;
+    private readonly InputAction m_UnitSelctionBox_Pointer;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "UnitSelctionBox".
+    /// </summary>
+    public struct UnitSelctionBoxActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public UnitSelctionBoxActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "UnitSelctionBox/UnitSelection".
+        /// </summary>
+        public InputAction @UnitSelection => m_Wrapper.m_UnitSelctionBox_UnitSelection;
+        /// <summary>
+        /// Provides access to the underlying input action "UnitSelctionBox/Pointer".
+        /// </summary>
+        public InputAction @Pointer => m_Wrapper.m_UnitSelctionBox_Pointer;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_UnitSelctionBox; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="UnitSelctionBoxActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(UnitSelctionBoxActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="UnitSelctionBoxActions" />
+        public void AddCallbacks(IUnitSelctionBoxActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UnitSelctionBoxActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UnitSelctionBoxActionsCallbackInterfaces.Add(instance);
+            @UnitSelection.started += instance.OnUnitSelection;
+            @UnitSelection.performed += instance.OnUnitSelection;
+            @UnitSelection.canceled += instance.OnUnitSelection;
+            @Pointer.started += instance.OnPointer;
+            @Pointer.performed += instance.OnPointer;
+            @Pointer.canceled += instance.OnPointer;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="UnitSelctionBoxActions" />
+        private void UnregisterCallbacks(IUnitSelctionBoxActions instance)
+        {
+            @UnitSelection.started -= instance.OnUnitSelection;
+            @UnitSelection.performed -= instance.OnUnitSelection;
+            @UnitSelection.canceled -= instance.OnUnitSelection;
+            @Pointer.started -= instance.OnPointer;
+            @Pointer.performed -= instance.OnPointer;
+            @Pointer.canceled -= instance.OnPointer;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UnitSelctionBoxActions.UnregisterCallbacks(IUnitSelctionBoxActions)" />.
+        /// </summary>
+        /// <seealso cref="UnitSelctionBoxActions.UnregisterCallbacks(IUnitSelctionBoxActions)" />
+        public void RemoveCallbacks(IUnitSelctionBoxActions instance)
+        {
+            if (m_Wrapper.m_UnitSelctionBoxActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="UnitSelctionBoxActions.AddCallbacks(IUnitSelctionBoxActions)" />
+        /// <seealso cref="UnitSelctionBoxActions.RemoveCallbacks(IUnitSelctionBoxActions)" />
+        /// <seealso cref="UnitSelctionBoxActions.UnregisterCallbacks(IUnitSelctionBoxActions)" />
+        public void SetCallbacks(IUnitSelctionBoxActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UnitSelctionBoxActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UnitSelctionBoxActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="UnitSelctionBoxActions" /> instance referencing this action map.
+    /// </summary>
+    public UnitSelctionBoxActions @UnitSelctionBox => new UnitSelctionBoxActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -512,5 +672,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMultiSelect(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UnitSelctionBox" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="UnitSelctionBoxActions.AddCallbacks(IUnitSelctionBoxActions)" />
+    /// <seealso cref="UnitSelctionBoxActions.RemoveCallbacks(IUnitSelctionBoxActions)" />
+    public interface IUnitSelctionBoxActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "UnitSelection" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUnitSelection(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pointer" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPointer(InputAction.CallbackContext context);
     }
 }
