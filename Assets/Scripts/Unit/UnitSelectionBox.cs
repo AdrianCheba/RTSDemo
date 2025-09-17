@@ -8,11 +8,7 @@ namespace Scripts
         [SerializeField]
         private RectTransform _boxVisual;
 
-        [SerializeField]
-        private Canvas _canvas;
-
         private Camera _myCam;
-        private RectTransform _canvasRect;
 
         private Rect _selectionBox;
         private Vector2 _startPosition;
@@ -21,28 +17,20 @@ namespace Scripts
         private void Start()
         {
             _myCam = Camera.main;
-            if (_canvas == null)
-                _canvas = GetComponentInParent<Canvas>();
-            _canvasRect = _canvas.GetComponent<RectTransform>();
-
             _startPosition = Vector2.zero;
             _endPosition = Vector2.zero;
-            _boxVisual.gameObject.SetActive(false);
+            _boxVisual.sizeDelta = Vector2.zero;
         }
 
         public void StartSelection()
         {
             _startPosition = Mouse.current.position.ReadValue();
             _selectionBox = new Rect();
-            _boxVisual.gameObject.SetActive(true);
         }
 
         public void PerformSelection(Vector2 position)
         {
             _endPosition = position;
-            Debug.Log(
-                $"Start: {_startPosition} End: {_endPosition} Size: {(_endPosition - _startPosition)}"
-            );
             DrawVisual();
             DrawSelection();
         }
@@ -53,7 +41,7 @@ namespace Scripts
 
             _startPosition = Vector2.zero;
             _endPosition = Vector2.zero;
-            _boxVisual.gameObject.SetActive(false);
+            _boxVisual.sizeDelta = Vector2.zero;
         }
 
         private void DrawVisual()

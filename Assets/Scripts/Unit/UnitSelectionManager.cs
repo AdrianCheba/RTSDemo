@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -69,19 +70,22 @@ namespace Scripts
 
         internal void Target()
         {
-            Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (Physics.Raycast(ray, out _hit, Mathf.Infinity, _ground))
+            if (_selectedUnits.Any(u => u != null && u.TryGetComponent<UnitMovement>(out _)))
             {
-                if (_selectedUnits.Count > 0)
+                Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+                if (Physics.Raycast(ray, out _hit, Mathf.Infinity, _ground))
                 {
                     SetGroundMark(true, _hit.point);
                     foreach (GameObject unit in _selectedUnits)
                     {
-                        if (!unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
-                            return;
-
-                        unitMovement.OnMovement(_hit.point);
+                        if (
+                            unit != null
+                            && unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)
+                        )
+                        {
+                            unitMovement.OnMovement(_hit.point);
+                        }
                     }
                 }
                 else
@@ -99,7 +103,6 @@ namespace Scripts
                 SetGroundMark(true, _hit.point);
                 EnableUnitMovement(unit, true);
             }
-
         }
 
         private void MultiSelect(GameObject unit)
