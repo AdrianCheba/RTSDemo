@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -79,10 +77,7 @@ namespace Scripts
                     SetGroundMark(true, _hit.point);
                     foreach (GameObject unit in _selectedUnits)
                     {
-                        if (
-                            unit != null
-                            && unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement)
-                        )
+                        if (unit != null&& unit.TryGetComponent<UnitMovement>(out UnitMovement unitMovement))
                         {
                             unitMovement.OnMovement(_hit.point);
                         }
@@ -119,7 +114,7 @@ namespace Scripts
             }
         }
 
-        private void DeselectAll()
+        internal void DeselectAll()
         {
             foreach (GameObject unit in _unitsList)
             {

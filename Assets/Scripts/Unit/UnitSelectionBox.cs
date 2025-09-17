@@ -30,6 +30,12 @@ namespace Scripts
 
         public void PerformSelection(Vector2 position)
         {
+            if (_boxVisual.rect.width > 0 || _boxVisual.rect.height > 0)
+            {
+                UnitSelectionManager.Instance.DeselectAll();
+                SelectUnits();
+            }
+
             _endPosition = position;
             DrawVisual();
             DrawSelection();

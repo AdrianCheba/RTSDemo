@@ -42,12 +42,6 @@ namespace Scripts
 
         private void Initialization()
         {
-            _movement = _mapPlayer.FindAction("Movement");
-            _movement.performed += _ =>
-            {
-                _unitSelectionManager.Target();
-            };
-
             _selection = _mapPlayer.FindAction("Selection");
             _selection.performed += _ =>
             {
@@ -79,6 +73,11 @@ namespace Scripts
                     return;
 
                 _selectionBox.PerformSelection(_pointer.ReadValue<Vector2>());
+            };
+            _movement = _mapPlayer.FindAction("Movement");
+            _movement.performed += _ =>
+            {
+                _unitSelectionManager.Target();
             };
         }
     }
